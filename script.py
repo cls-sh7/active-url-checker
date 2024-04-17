@@ -24,17 +24,17 @@ def get_active_urls(domain):
         if full_url.startswith(base_url):
 
             try:
-                link_response = requests.head(full_url, allow_redirects=True)
-                if link_response.status_code < 400:
+                link_response = requests.get(full_url, timeout=5)
+                if link_response.status_code == 200:
                     active_urls.add(full_url)
-            except requests.RequestException:
-                pass
+            except requests.RequestException as e:
+                print(f"Error when accessing {full_url}: {e}")
 
     return active_urls
 
 
 if __name__ == "__main__":
-    domain = input("Enter the domain (ex: example.com): ")
+    domain = input("Enter the domain (example.com): ")
     active_urls = get_active_urls(domain)
     print("Active URLs found:")
     for url in active_urls:
